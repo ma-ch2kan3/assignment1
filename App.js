@@ -7,9 +7,8 @@ const coursesData = [
     name: 'Software Engineering',
     description: 'Learn the fundamentals of computer science and software engineering.',
     image: 'Software Engineering.jpg', // Placeholder image URL
-    requirements: 'Minimum of 4 creadits in Maths and Physical Science included.',
-    rating: 6.0,
-    
+    requirements: 'Minimum of 4 credits in Maths and Physical Science included.',
+    rating: 0,
   },
   {
     id: 2,
@@ -17,8 +16,7 @@ const coursesData = [
     description: 'Explore your creativity and learn graphic design techniques.',
     image: 'Graphic Design2.jpg', // Placeholder image URL
     requirements: 'Minimum of 3 credits in Maths and Computer Skills involved.',
-    rating: 6.0,
-    
+    rating: 0,
   },
   {
     id: 3,
@@ -26,15 +24,15 @@ const coursesData = [
     description: 'Explore some great adventure of the world.',
     image: 'Tourism2.jpg',
     requirements: 'Minimum of 2 credits in English and Sesotho',
-    rating: 6.0,
+    rating: 0,
   },
   {
     id: 4,
     name: 'Architecture',
-    description: 'Learn how to design and draw the blue-prints.',
+    description: 'Learn how to design and draw the blueprints.',
     image: 'Architecture1.jpg',
-    requirements: 'Minimum of 4 creadits in maths and Physical science included.',
-    rating: 6.0,
+    requirements: 'Minimum of 4 credits in Maths and Physical science included.',
+    rating: 0,
   },
   {
     id: 5,
@@ -44,10 +42,9 @@ const coursesData = [
     requirements: 'Minimum of 3 credits in English, Maths and any other subject.',
     rating: 0,
   },
-  // Add more courses as needed
 ];
 
-const CourseItem = ({ course, onPress }) => {
+const CourseItem = ({ course, onPress, onRate }) => {
   return (
     <TouchableOpacity style={styles.itemContainer} onPress={() => onPress(course)}>
       <Image source={{ uri: course.image }} style={styles.courseImage} />
@@ -55,6 +52,9 @@ const CourseItem = ({ course, onPress }) => {
         <Text style={styles.courseName}>{course.name}</Text>
         <Text style={styles.courseDescription}>{course.description}</Text>
         <Text style={styles.courseRequirements}>{course.requirements}</Text>
+        <TouchableOpacity style={styles.rateButton} onPress={() => onRate(course)}>
+          <Text style={styles.rateButtonText}>Rate Course</Text>
+        </TouchableOpacity>
         <Text style={styles.courseRating}>Rating: {course.rating}</Text>
       </View>
     </TouchableOpacity>
@@ -65,7 +65,20 @@ const App = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   const renderCourseItem = ({ item }) => {
-    return <CourseItem course={item} onPress={setSelectedCourse} />;
+    return <CourseItem course={item} onPress={setSelectedCourse} onRate={rateCourse} />;
+  };
+
+  const rateCourse = (course) => {
+    if (course.rating < 6) {
+      const updatedCourses = coursesData.map((c) => {
+        if (c.id === course.id) {
+          return { ...c, rating: c.rating + 1 };
+        } else {
+          return c;
+        }
+      });
+      coursesData = updatedCourses;
+    }
   };
 
   return (
@@ -85,7 +98,6 @@ const App = () => {
           <Text style={styles.selectedCourseName}>{selectedCourse.name}</Text>
           <Text style={styles.selectedCourseDescription}>{selectedCourse.description}</Text>
           <Text style={styles.selectedCourseRequirements}>{selectedCourse.requirements}</Text>
-          <Text style={styles.selectedCourseRating}>Rating: {selectedCourse.rating}</Text>
         </View>
       )}
 
@@ -151,6 +163,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#00ced1',
   },
+  rateButton: {
+    backgroundColor: '#ff0800',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  rateButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    textAlign: 'center',
+  },
   courseRating: {
     fontSize: 30,
     marginTop: 5,
@@ -187,3 +210,4 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
